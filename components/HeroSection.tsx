@@ -1,3 +1,4 @@
+import Link from "next/link";
 import HeroIllustration from "./HeroIllustration";
 
 export default function HeroSection() {
@@ -27,12 +28,12 @@ export default function HeroSection() {
             </p>
 
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-              <a
-                href="#get-started"
+              <Link
+                href="/register"
                 className="inline-flex items-center justify-center rounded-lg bg-lavender px-7 py-3.5 text-sm font-semibold text-white shadow-md shadow-lavender/25 transition-all hover:bg-lavender/90 hover:shadow-lg hover:shadow-lavender/30"
               >
                 Start Assessment
-              </a>
+              </Link>
               <a
                 href="#assessments"
                 className="inline-flex items-center justify-center rounded-lg border-2 border-lavender-light bg-white px-7 py-3.5 text-sm font-semibold text-lavender transition-all hover:border-lavender hover:bg-lavender-muted/40"

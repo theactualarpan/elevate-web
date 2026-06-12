@@ -1,12 +1,13 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import Logo from "./Logo";
 
 const navLinks = [
-  { label: "Assessments", href: "#assessments" },
-  { label: "About", href: "#about" },
-  { label: "Contact", href: "#contact" },
+  { label: "Assessments", href: "/#assessments" },
+  { label: "About", href: "/#about" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 export default function Navbar() {
@@ -15,35 +16,35 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-gray-100 bg-white/90 backdrop-blur-md">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-        <a href="#" className="shrink-0">
+        <Link href="/" className="shrink-0">
           <Logo />
-        </a>
+        </Link>
 
         <div className="hidden items-center gap-8 md:flex">
           {navLinks.map((link) => (
-            <a
+            <Link
               key={link.label}
               href={link.href}
               className="text-sm font-medium text-gray-600 transition-colors hover:text-lavender"
             >
               {link.label}
-            </a>
+            </Link>
           ))}
         </div>
 
         <div className="hidden items-center gap-4 md:flex">
-          <a
-            href="#login"
+          <Link
+            href="/login"
             className="text-sm font-medium text-gray-600 transition-colors hover:text-lavender"
           >
             Login
-          </a>
-          <a
-            href="#get-started"
+          </Link>
+          <Link
+            href="/register"
             className="rounded-lg bg-lavender px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-lavender/90 hover:shadow-md"
           >
             Get Started
-          </a>
+          </Link>
         </div>
 
         <button
@@ -69,29 +70,29 @@ export default function Navbar() {
         <div className="border-t border-gray-100 bg-white px-4 py-4 md:hidden">
           <div className="flex flex-col gap-4">
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.label}
                 href={link.href}
                 className="text-sm font-medium text-gray-600 hover:text-lavender"
                 onClick={() => setMobileOpen(false)}
               >
                 {link.label}
-              </a>
+              </Link>
             ))}
-            <a
-              href="#login"
+            <Link
+              href="/login"
               className="text-sm font-medium text-gray-600 hover:text-lavender"
               onClick={() => setMobileOpen(false)}
             >
               Login
-            </a>
-            <a
-              href="#get-started"
+            </Link>
+            <Link
+              href="/register"
               className="rounded-lg bg-lavender px-5 py-2.5 text-center text-sm font-semibold text-white"
               onClick={() => setMobileOpen(false)}
             >
               Get Started
-            </a>
+            </Link>
           </div>
         </div>
       )}
