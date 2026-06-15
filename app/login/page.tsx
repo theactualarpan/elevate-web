@@ -1,14 +1,32 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import AuthLayout from "@/components/auth/AuthLayout";
 import FormField from "@/components/auth/FormField";
 import GoogleButton from "@/components/auth/GoogleButton";
 import Divider from "@/components/auth/Divider";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 
 export default function LoginPage() {
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  const router = useRouter();
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    const form = e.currentTarget;
+
+    const email = (form.elements.namedItem("email") as HTMLInputElement).value;
+    const password = (form.elements.namedItem("password") as HTMLInputElement).value;
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+
+      router.push("/dashboard");
+    } catch (error: any) {
+      alert(error.message);
+    }
   }
 
   return (
@@ -42,6 +60,7 @@ export default function LoginPage() {
             />
             <span className="text-sm text-gray-600">Remember me</span>
           </label>
+
           <Link
             href="/forgot-password"
             className="text-sm font-medium text-lavender hover:text-lavender/80"
@@ -63,7 +82,10 @@ export default function LoginPage() {
 
         <p className="text-center text-sm text-gray-600">
           Don&apos;t have an account?{" "}
-          <Link href="/register" className="font-semibold text-lavender hover:text-lavender/80">
+          <Link
+            href="/register"
+            className="font-semibold text-lavender hover:text-lavender/80"
+          >
             Register
           </Link>
         </p>

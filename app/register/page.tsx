@@ -6,11 +6,67 @@ import FormField from "@/components/auth/FormField";
 import GoogleButton from "@/components/auth/GoogleButton";
 import Divider from "@/components/auth/Divider";
 
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth, db } from "@/lib/firebase";
+import { doc, setDoc } from "firebase/firestore";
+
 const genderOptions = ["Male", "Female", "Other"] as const;
 
 export default function RegisterPage() {
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    const form = e.currentTarget;
+
+    const fullName = (
+      form.elements.namedItem("fullName") as HTMLInputElement
+    ).value;
+
+    const gender = (
+      form.elements.namedItem("gender") as RadioNodeList
+    ).value;
+
+    const userType = (
+      form.elements.namedItem("userType") as HTMLSelectElement
+    ).value;
+
+    const email = (
+      form.elements.namedItem("email") as HTMLInputElement
+    ).value;
+
+    const password = (
+      form.elements.namedItem("password") as HTMLInputElement
+    ).value;
+
+    const confirmPassword = (
+      form.elements.namedItem("confirmPassword") as HTMLInputElement
+    ).value;
+
+    if (password !== confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      await setDoc(doc(db, "users", userCredential.user.uid), {
+        uid: userCredential.user.uid,
+        fullName,
+        gender,
+        userType,
+        email,
+        createdAt: new Date().toISOString(),
+      });
+
+      alert("Registration successful!");
+    } catch (error: any) {
+      alert(error.message);
+    }
   }
 
   return (
@@ -27,7 +83,10 @@ export default function RegisterPage() {
         />
 
         <fieldset>
-          <legend className="block text-sm font-medium text-gray-700">Gender</legend>
+          <legend className="block text-sm font-medium text-gray-700">
+            Gender
+          </legend>
+
           <div className="mt-2 flex flex-wrap gap-3">
             {genderOptions.map((option) => (
               <label
@@ -72,9 +131,13 @@ export default function RegisterPage() {
         />
 
         <div>
-          <label htmlFor="userType" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="userType"
+            className="block text-sm font-medium text-gray-700"
+          >
             User Type
           </label>
+
           <select
             id="userType"
             name="userType"
@@ -85,6 +148,7 @@ export default function RegisterPage() {
             <option value="" disabled>
               Select user type
             </option>
+
             <option value="student">Student</option>
             <option value="college">College</option>
           </select>
@@ -103,7 +167,10 @@ export default function RegisterPage() {
 
         <p className="text-center text-sm text-gray-600">
           Already have an account?{" "}
-          <Link href="/login" className="font-semibold text-lavender hover:text-lavender/80">
+          <Link
+            href="/login"
+            className="font-semibold text-lavender hover:text-lavender/80"
+          >
             Login
           </Link>
         </p>
