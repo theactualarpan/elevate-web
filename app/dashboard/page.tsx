@@ -17,6 +17,12 @@ export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const router = useRouter();
+const initials = profile?.fullName
+  ?.split(" ")
+  .map((name) => name[0])
+  .join("")
+  .slice(0, 2)
+  .toUpperCase();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -55,23 +61,32 @@ export default function DashboardPage() {
     <main className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50 p-6">
       <div className="mx-auto max-w-6xl">
 
-        <div className="mb-8 flex items-center justify-between">
-          <div>
-            <h1 className="text-4xl font-bold text-gray-900">
-              Welcome Back, {profile.fullName.split(" ")[0]} 👋
-            </h1>
-            <p className="mt-2 text-gray-600">
-              Measure • Learn • Grow
-            </p>
-          </div>
+       <div className="mb-8 flex items-center justify-between">
+  <div>
+    <h1 className="text-4xl font-bold text-gray-900">
+      Welcome Back, {profile.fullName.split(" ")[0]} 👋
+    </h1>
 
-          <button
-            onClick={handleLogout}
-            className="rounded-xl bg-red-500 px-5 py-3 font-semibold text-white hover:bg-red-600"
-          >
-            Logout
-          </button>
-        </div>
+    <p className="mt-2 text-gray-600">
+      {profile.userType === "student"
+        ? "Student Account • Measure • Learn • Grow"
+        : "College Account • Measure • Learn • Grow"}
+    </p>
+  </div>
+
+  <div className="flex items-center gap-4">
+    <div className="flex h-14 w-14 items-center justify-center rounded-full bg-purple-600 text-lg font-bold text-white shadow-lg">
+      {initials}
+    </div>
+
+    <button
+      onClick={handleLogout}
+      className="rounded-xl bg-red-500 px-5 py-3 font-semibold text-white hover:bg-red-600"
+    >
+      Logout
+    </button>
+  </div>
+</div>
 
         <div className="grid gap-6 md:grid-cols-3">
 
