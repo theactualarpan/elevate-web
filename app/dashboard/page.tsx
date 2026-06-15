@@ -58,7 +58,7 @@ export default function DashboardPage() {
         <div className="mb-8 flex items-center justify-between">
           <div>
             <h1 className="text-4xl font-bold text-gray-900">
-              Welcome Back, {profile.fullName} 👋
+              Welcome Back, {profile.fullName.split(" ")[0]} 👋
             </h1>
             <p className="mt-2 text-gray-600">
               Measure • Learn • Grow
