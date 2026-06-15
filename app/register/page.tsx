@@ -9,10 +9,12 @@ import Divider from "@/components/auth/Divider";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "@/lib/firebase";
 import { doc, setDoc } from "firebase/firestore";
+import { useRouter } from "next/navigation";
 
 const genderOptions = ["Male", "Female", "Other"] as const;
 
 export default function RegisterPage() {
+  const router = useRouter();
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
@@ -63,7 +65,7 @@ export default function RegisterPage() {
         createdAt: new Date().toISOString(),
       });
 
-      alert("Registration successful!");
+      router.push("/dashboard");
     } catch (error: any) {
       alert(error.message);
     }
