@@ -1,11 +1,50 @@
+"use client";
+
+import { signInWithPopup } from "firebase/auth";
+import { auth, googleProvider, db } from "@/lib/firebase";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { useRouter } from "next/navigation";
+
 type GoogleButtonProps = {
   label?: string;
 };
 
-export default function GoogleButton({ label = "Continue with Google" }: GoogleButtonProps) {
+export default function GoogleButton({
+  label = "Continue with Google",
+}: GoogleButtonProps) {
+  const router = useRouter();
+
+  async function handleGoogleLogin() {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+
+      const user = result.user;
+
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
+
+      if (!userSnap.exists()) {
+        await setDoc(userRef, {
+          uid: user.uid,
+          fullName: user.displayName || "",
+          email: user.email || "",
+          photoURL: user.photoURL || "",
+          gender: "",
+          userType: "student",
+          createdAt: new Date().toISOString(),
+        });
+      }
+
+      router.push("/dashboard");
+    } catch (error: any) {
+      alert(error.message);
+    }
+  }
+
   return (
     <button
       type="button"
+      onClick={handleGoogleLogin}
       className="flex w-full items-center justify-center gap-3 rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:border-gray-300 hover:bg-gray-50"
     >
       <svg className="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
@@ -26,6 +65,7 @@ export default function GoogleButton({ label = "Continue with Google" }: GoogleB
           fill="#EA4335"
         />
       </svg>
+
       {label}
     </button>
   );
